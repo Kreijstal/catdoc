@@ -16,6 +16,10 @@
 #if defined(MSDOS) && !defined(__MSDOS__)
 #define __MSDOS__
 #endif
+#if defined(_WIN32)
+#include <windows.h>
+#include <shlwapi.h>
+#endif
 #if defined(__MSDOS__) || defined(_WIN32)
 #include <dir.h>
 #include <dos.h>
@@ -52,7 +56,7 @@ int prepare_path_buf(char *path_buf, const char *start, const char *end) {
 	if (!*path_buf) {
 		path_buf[0]='.';
 		path_buf[1]=0;
-#ifdef __MSDOS__
+#if defined(__MSDOS__) || defined(_WIN32)
 	} else {
 		strcpy(path_buf,add_exe_path(path_buf)); /* safe, becouse
 													add_exe_path knows about PATH_BUF_SIZE */
@@ -136,20 +140,28 @@ char *stradd(const char *s1,const char *s2)
  * In DOS, argv[0] contain full path to the program, and it is a custom
  * to keep configuration files in same directory as program itself
  */
-#ifdef __MSDOS__
+#if  defined(__MSDOS__)||defined(_WIN32)
+
 char *exe_dir(void) {
-	static char pathbuf[PATH_BUF_SIZE];
-	char *q;
-	strcpy(pathbuf,_argv[0]); /* DOS ensures, that our exe path is no
-								 longer than PATH_BUF_SIZE*/
-	q=strrchr(pathbuf,DIR_SEP);
-	if (q) {
-		*q=0;
-	} else {
-		pathbuf[0]=0;
-	}
-	return pathbuf;
+    static char pathbuf[MAX_PATH];
+
+#ifdef __MSDOS__
+    char *q;
+    strcpy(pathbuf, _argv[0]); /* DOS ensures that our exe path is no longer than PATH_BUF_SIZE */
+    q = strrchr(pathbuf, DIR_SEP);
+    if (q) {
+        *q = 0;
+    } else {
+        pathbuf[0] = 0;
+    }
+#else
+    GetModuleFileName(NULL, pathbuf, MAX_PATH);
+    PathRemoveFileSpec(pathbuf);
+#endif
+
+    return pathbuf;
 }
+
 char *add_exe_path(const char *name) {
 	static char path[PATH_BUF_SIZE];
 	char *mypath=exe_dir();
@@ -181,8 +193,12 @@ void list_charsets(void) {
 	char dir_sep[2]={DIR_SEP,0};
 	char **ptr;
 #ifdef __MSDOS__
-	struct ffblk ffblock;
-	int res,col;
+    struct ffblk ffblock;
+    int res, col;
+#elif defined(_WIN32)
+    WIN32_FIND_DATA find_data;
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+    int col;
 #else
 	glob_t glob_buf;
 	int count,glob_flags=GLOB_ERR;
@@ -206,7 +222,7 @@ void list_charsets(void) {
 		if (!*path_buf) {
 			path_buf[0]='.';
 			path_buf[1]=0;
-#ifdef __MSDOS__
+#if  defined(__MSDOS__)||defined(_WIN32)
 		} else {
 			strcpy(path_buf,add_exe_path(path_buf)); /* safe, becouse
 														add_exe_path knows about PATH_BUF_SIZE */
@@ -216,7 +232,7 @@ void list_charsets(void) {
 		if (strlen(path_buf)+6>=PATH_BUF_SIZE)
 			continue; /* Ignore too deeply nested directories */
 		strcat(path_buf,"*.txt");
-#ifdef __MSDOS__
+#if  defined(__MSDOS__)
 		res=findfirst(path_buf,&ffblock,FA_RDONLY | FA_HIDDEN | FA_ARCH);
 		col=1;
 		printf("Available charsets:\n"); 
@@ -232,6 +248,23 @@ void list_charsets(void) {
 			printf("%10s",name);
 			res=findnext(&ffblock);
 		}
+#elif defined(_WIN32)
+    strcat(path_buf, "\\*.*");
+    hFind = FindFirstFile(path_buf, &find_data);
+    col = 1;
+    printf("Available charsets:\n");
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            char name[MAX_PATH];
+            strcpy(name, find_data.cFileName);
+            char *ext = strrchr(name, '.');
+            if (ext != NULL) *ext = '\0';  // Remove extension
+            _strlwr(name);  // Convert to lowercase
+            printf("%10s%c", name, (col < 5) ? '\t' : '\n');
+            if (++col > 5) col = 1;
+        } while (FindNextFile(hFind, &find_data));
+        FindClose(hFind);
+    }
 #else
 		switch (glob(path_buf,glob_flags,NULL,&glob_buf)) {
 			case 0:
@@ -246,7 +279,7 @@ void list_charsets(void) {
 		glob_flags|=GLOB_APPEND;
 #endif
 	}
-#ifdef __MSDOS__
+#if  defined(__MSDOS__)||defined(_WIN32)
 	fputs("utf-8\n",stdout);
 #else
 	count=0;printf("Available charsets:"); 

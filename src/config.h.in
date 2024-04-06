@@ -1,49 +1,107 @@
-/* src/config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+#undef VERSION
+#undef PACKAGE
 
-/* Define to empty if the keyword does not work.  */
-#undef const
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
 
-/* Define if the setvbuf function takes the buffering type as its second
-   argument and the buffer pointer as the third, as on System V
-   before release 3.  */
-#undef SETVBUF_REVERSED
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
 
-/* Define if you have the ANSI C header files.  */
-#undef STDC_HEADERS
+/* Define this if you have XPG4 comliant nl_langinfo, which accepts CODESET
+   argument */
+#undef HAVE_LANGINFO
 
-/* Define if your processor stores words with the most significant
-   byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-#undef WORDS_BIGENDIAN
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
 
-/* Define if you have the strdup function.  */
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strdup' function. */
 #undef HAVE_STRDUP
 
-/* Define if you have the strftime function.  */
+/* Define to 1 if you have the `strftime' function. */
 #undef HAVE_STRFTIME
 
-/* Define if you have the strtol function.  */
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strtol' function. */
 #undef HAVE_STRTOL
 
-/* Define if you have the <unistd.h> header file.  */
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define if you have the <stdint.h> header file.  */
-#undef HAVE_STDINT_H
-/* Define this if you have XPG4 comliant nl_langinfo, which accepts CODESET argument */
-#undef HAVE_LANGINFO
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Suffix for symbols replacement map (what to do with symbols, which are not
+   available in the target encoding) */
+#undef REPL_EXT
 
 /* Character encoding used by default for 8-bit source files */
 #undef SOURCE_CHARSET
 
-/* Output character encoding used by default, if impossible to determine encoding from locale */
-#undef TARGET_CHARSET
-
-/* Suffix for files with special symbols map (ones to be replaced regardless of availability in target encoding) */
+/* Suffix for files with special symbols map (ones to be replaced regardless
+   of availability in target encoding) */
 #undef SPEC_EXT
 
-/* Suffix for symbols replacement map (what to do with symbols, which are not available in the target encoding) */
-#undef REPL_EXT
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
 
-/* Symbol to represent character which is not available either in target encoding or in replacement map */
+/* Output character encoding used by default, if impossible to determine
+   encoding from locale */
+#undef TARGET_CHARSET
+
+/* Symbol to represent character which is not available either in target
+   encoding or in replacement map */
 #undef UNKNOWN_CHAR
 
+/* Version number of package */
+#undef VERSION
+
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const

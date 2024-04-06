@@ -1,5 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([catdoc],[0.95])
+AM_INIT_AUTOMAKE
 dnl Checks for programs.
 AC_PROG_CC
 case ${CC} in
@@ -9,6 +10,21 @@ case ${CC} in
 *)
 ;;
 esac
+AC_CANONICAL_HOST
+case "$host" in
+  *mingw*)
+    TARGET_WIN32=true
+    ;;
+  *)
+    TARGET_WIN32=false
+    ;;
+esac
+
+if test "$TARGET_WIN32" = true; then
+  LDFLAGS="$LDFLAGS -lShlwapi"
+else
+  LDFLAGS="$LDFLAGS"
+fi
 AC_C_BIGENDIAN
 AC_PROG_INSTALL
 if test "$enable_wordview" != "no" ;then

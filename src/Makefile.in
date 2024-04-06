@@ -24,7 +24,8 @@ CHARSETPATH=${datadir}/catdoc
 # Flags to pass to your C compilier
 # remove -O2 on HP/UX 9. It is known to cause problems
 FLAGS=-I. @CFLAGS@  @DEFS@ -DCATDOC_VERSION=\"@PACKAGE_VERSION@\" -DCHARSETPATH=\"${CHARSETPATH}\"
-
+# Linker flags
+LDFLAGS = @LDFLAGS@
 #Compile-time configuration of catdoc itself. Edit according to taste
 
 #Directory, where all system-wide stuff resides
